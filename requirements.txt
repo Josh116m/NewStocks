@@ -1,0 +1,52 @@
+# Core Data Processing
+pandas>=1.5.3,<2.0.0
+numpy>=1.24.0,<2.0.0
+scipy>=1.10.0,<2.0.0
+
+# Machine Learning
+scikit-learn>=1.2.0,<2.0.0
+xgboost>=1.7.0,<2.0.0
+lightgbm>=3.3.0,<4.0.0
+
+# Deep Learning
+torch>=2.0.0,<3.0.0
+pytorch-lightning>=2.0.0,<3.0.0
+
+# Technical Analysis
+pandas-ta>=0.3.14b
+
+# AWS S3 Access (for Polygon.io data)
+boto3>=1.26.0,<2.0.0
+
+# Visualization
+matplotlib>=3.6.0,<4.0.0
+seaborn>=0.12.0,<1.0.0
+
+# System Monitoring
+psutil>=5.9.0,<6.0.0
+gputil>=1.4.0
+
+# Serialization
+joblib>=1.2.0,<2.0.0
+
+# Optional but recommended for better performance
+pyarrow>=11.0.0  # For parquet file support
+numba>=0.56.0  # For JIT compilation of numerical code
+
+# GPU Acceleration
+cupy-cuda12x>=13.0.0  # GPU-accelerated NumPy replacement (CUDA 12.x compatible)
+# rapids-cudf>=23.0.0  # GPU-accelerated pandas replacement (optional, Windows compatibility issues)
+# cuml>=23.0.0  # GPU-accelerated scikit-learn (optional, Windows compatibility issues)
+
+# Development tools (optional)
+jupyter>=1.0.0
+ipykernel>=6.20.0
+black>=23.0.0  # Code formatting
+pytest>=7.2.0  # Testing
+pytest-cov>=4.0.0  # Test coverage
+
+# For production deployment (optional)
+gunicorn>=20.1.0  # Web server
+redis>=4.5.0  # For caching predictions
+celery>=5.2.0  # For scheduled tasks
+prometheus-client>=0.16.0  # For monitoring metrics

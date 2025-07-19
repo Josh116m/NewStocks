@@ -1,0 +1,95 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.egg-info/
+dist/
+build/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+*.ipynb
+
+# Data files
+data/
+*.csv
+*.parquet
+*.xlsx
+*.json
+stock_data_*
+
+# Model files
+models/
+checkpoints/
+*.pkl
+*.pth
+*.h5
+*.joblib
+final_models_*/
+
+# Logs
+logs/
+*.log
+training_metrics.json
+
+# Predictions and results
+predictions/
+backtest_results/
+predictions_*.csv
+backtest_*.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+.hypothesis/
+
+# Documentation
+docs/_build/
+site/
+
+# Credentials (IMPORTANT!)
+.env
+credentials.json
+config.ini
+*.key
+*.pem
+
+# System
+Thumbs.db
+.DS_Store
+
+# Resource monitoring
+resource_usage.png
+training_history.png
+*.png
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+~*
+
+# Large files
+*.zip
+*.tar.gz
+*.rar
+
+# Polygon.io API keys (if stored separately)
+polygon_config.py
+api_keys.py

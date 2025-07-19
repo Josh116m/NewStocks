@@ -57,20 +57,34 @@ This system uses advanced machine learning to analyze stocks and provide trading
 
 ## 📈 Getting Fresh Data
 
-### Option 1: Download Fresh Data (Recommended)
+### Option 1: Daily Data Update (Recommended)
 **🔑 API credentials included - no setup required!**
 
+```bash
+# Windows
+update_data.bat
+
+# Linux/Mac
+python daily_data_update.py
+```
+
+This will:
+- Check if your data needs updating
+- Download only the missing days (fast!)
+- Update to current trading day automatically
+- Backup existing data before updating
+
+### Option 2: Full Data Download (First Time)
 ```bash
 python download_fresh_data.py
 ```
 
 This will:
 - Download latest 2 years of data (10,000+ stocks)
-- Update to current date automatically
-- Backup existing data before updating
 - Take 10-20 minutes depending on connection
+- Use this for initial setup only
 
-### Option 2: Check Current Data Status
+### Option 3: Check Current Data Status
 ```bash
 python download_fresh_data.py check
 ```

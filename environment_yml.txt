@@ -1,0 +1,48 @@
+name: stock-trading
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  # Python version
+  - python=3.9
+  
+  # Core data processing
+  - pandas=1.5.3
+  - numpy=1.24.3
+  - scipy=1.10.1
+  
+  # Machine learning
+  - scikit-learn=1.2.2
+  - xgboost=1.7.5
+  - lightgbm=3.3.5
+  
+  # Deep learning (adjust cuda version as needed)
+  - pytorch=2.0.1
+  - torchvision=0.15.2
+  - pytorch-cuda=11.8  # Remove this line for CPU-only
+  
+  # Visualization
+  - matplotlib=3.7.1
+  - seaborn=0.12.2
+  
+  # Jupyter
+  - jupyter=1.0.0
+  - ipykernel=6.22.0
+  
+  # System tools
+  - psutil=5.9.5
+  
+  # Pip dependencies (not available in conda)
+  - pip
+  - pip:
+    - pytorch-lightning==2.0.9
+    - pandas-ta==0.3.14b0
+    - boto3==1.26.137
+    - gputil==1.4.0
+    - joblib==1.2.0
+    - pyarrow==11.0.0
+    
+# Create environment with:
+# conda env create -f environment.yml
+# conda activate stock-trading

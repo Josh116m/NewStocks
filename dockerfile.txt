@@ -1,0 +1,53 @@
+# Dockerfile for Stock Trading Prediction System
+
+# Use NVIDIA CUDA base image for GPU support
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+
+# Set working directory
+WORKDIR /app
+
+# Install Python and system dependencies
+RUN apt-get update && apt-get install -y \
+    python3.9 \
+    python3-pip \
+    python3-dev \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create symbolic links for python
+RUN ln -s /usr/bin/python3.9 /usr/bin/python
+
+# Upgrade pip
+RUN pip install --upgrade pip
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install PyTorch with CUDA support
+RUN pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 \
+    --index-url https://download.pytorch.org/whl/cu118
+
+# Copy all project files
+COPY *.py ./
+COPY config.yaml.template ./config.yaml
+
+# Create necessary directories
+RUN mkdir -p data models checkpoints logs predictions backtest_results
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV CUDA_VISIBLE_DEVICES=0
+
+# Run verification script on build
+RUN python run_first_time.py || true
+
+# Default command
+CMD ["python", "main_trading_system.py"]
+
+# Alternative commands:
+# For training: CMD ["python", "main_trading_system.py", "--train"]
+# For prediction: CMD ["python", "main_trading_system.py", "--predict"]
+# For Jupyter: CMD ["jupyter", "lab", "--ip=0.0.0.0", "--no-browser", "--allow-root"]

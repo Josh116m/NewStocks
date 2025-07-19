@@ -1,0 +1,129 @@
+# Makefile for Stock Trading Prediction System
+
+.PHONY: help install install-gpu test clean train predict backtest setup check
+
+# Default target
+help:
+	@echo "Stock Trading Prediction System - Available Commands:"
+	@echo "===================================================="
+	@echo "make install      - Install all dependencies"
+	@echo "make install-gpu  - Install with GPU support"
+	@echo "make setup        - First time setup and verification"
+	@echo "make check        - Check system readiness"
+	@echo "make download     - Download 2 years of stock data"
+	@echo "make train        - Train the complete model"
+	@echo "make predict      - Make predictions for tomorrow"
+	@echo "make backtest     - Run backtest on historical data"
+	@echo "make test         - Run unit tests"
+	@echo "make clean        - Clean temporary files"
+	@echo "make format       - Format code with black"
+
+# Installation
+install:
+	pip install -r requirements.txt
+
+install-gpu:
+	pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 -f https://download.pytorch.org/whl/torch_stable.html
+	pip install -r requirements.txt
+
+# Setup and verification
+setup:
+	python run_first_time.py
+
+check:
+	@echo "Checking Python version..."
+	@python --version
+	@echo "\nChecking GPU availability..."
+	@python -c "import torch; print(f'GPU Available: {torch.cuda.is_available()}')"
+	@echo "\nChecking key imports..."
+	@python -c "import pandas, numpy, torch, xgboost, lightgbm; print('✓ All core packages imported')"
+
+# Data operations
+download:
+	@echo "Downloading 2 years of stock data..."
+	python -c "from polygon_downloader import download_2year_data; download_2year_data()"
+
+download-test:
+	@echo "Downloading 1 month of data for testing..."
+	python -c "from polygon_downloader import download_2year_data; download_2year_data(target_days=21)"
+
+# Model operations
+train:
+	python main_trading_system.py --train
+
+train-quick:
+	@echo "Quick training with reduced epochs..."
+	python main_trading_system.py --train --max-epochs 10
+
+predict:
+	python main_trading_system.py --predict
+
+backtest:
+	python main_trading_system.py --backtest --start-date 2023-01-01 --end-date 2024-01-01
+
+# Testing
+test:
+	pytest tests/ -v --cov=. --cov-report=html
+
+test-quick:
+	pytest tests/ -v -k "not slow"
+
+# Code quality
+format:
+	black *.py
+
+lint:
+	flake8 *.py --max-line-length=100
+	mypy *.py --ignore-missing-imports
+
+# Cleaning
+clean:
+	find . -type f -name "*.pyc" -delete
+	find . -type d -name "__pycache__" -delete
+	rm -f .coverage
+	rm -rf htmlcov/
+	rm -f *.log
+
+clean-data:
+	rm -f stock_data_*.csv stock_data_*.parquet
+
+clean-models:
+	rm -rf checkpoints/checkpoint_epoch_*.pkl
+	rm -rf models/final_models_*/
+
+clean-all: clean clean-data clean-models
+	rm -rf data/ models/ checkpoints/ predictions/ backtest_results/
+
+# Docker operations
+docker-build:
+	docker build -t stock-trading-predictor .
+
+docker-run:
+	docker run -it --gpus all -v $(PWD)/data:/app/data stock-trading-predictor
+
+# Production
+serve:
+	gunicorn -w 4 -b 0.0.0.0:8000 app:application
+
+celery:
+	celery -A tasks worker --loglevel=info
+
+# Development helpers
+notebook:
+	jupyter notebook
+
+shell:
+	ipython
+
+monitor:
+	@echo "Starting resource monitor..."
+	python -c "from training_pipeline import ResourceMonitor; m = ResourceMonitor(); m.start_monitoring(); input('Press Enter to stop...'); m.stop_monitoring(); m.plot_usage()"
+
+# Data analysis
+analyze-data:
+	python -c "import pandas as pd; df = pd.read_parquet('stock_data_2years.parquet'); print(df.describe()); print(f'\nShape: {df.shape}'); print(f'Stocks: {df.ticker.nunique()}')"
+
+# Performance profiling
+profile:
+	python -m cProfile -o profile_results.prof main_trading_system.py --train --max-epochs 1
+	python -m pstats profile_results.prof
